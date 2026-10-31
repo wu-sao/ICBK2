@@ -1,0 +1,35 @@
+#include <opencv2/opencv.hpp>
+#include <iostream>
+using namespace cv;
+using namespace std;
+
+int main()
+{
+    Mat src = imread("test.jpg");
+    if(src.empty())
+    {
+        cout << "图片读取失败" << endl;
+        return -1;
+    }
+    imwrite("origin.jpg", src);
+
+    Mat gray;
+    cvtColor(src, gray, COLOR_BGR2GRAY);
+    imwrite("gray.jpg", gray);
+    int gray_nonzero = countNonZero(gray);
+    cout << "灰度图非0像素:" << gray_nonzero << endl;
+
+    Mat thres;
+    threshold(gray, thres, 127, 255, THRESH_BINARY);
+    imwrite("thres.jpg", thres);
+    int thres_nonzero = countNonZero(thres);
+    cout << "二值化非0像素:" << thres_nonzero << endl;
+    cout << "二值图片已经保存为 thres.jpg" << endl;
+
+    Mat resize_img;
+    resize(src, resize_img, Size(src.cols / 2, src.rows / 2));
+    imwrite("resize.jpg", resize_img);
+    cout << "缩放完成，缩放后图片保存为 resize.jpg" << endl;
+
+    return 0;
+}
